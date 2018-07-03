@@ -1,4 +1,5 @@
-pragma solidity ^0.4.19;
+// pragma solidity ^0.4.19;
+pragma experimental ABIEncoderV2;
 
 contract CryptoKnight {
 
@@ -27,5 +28,9 @@ contract CryptoKnight {
   function createRandomKnight(string _name) public {
     uint randDna = _generateRandomDna(_name);
     _createKnight(_name, randDna);
+  }
+
+  function getKnights() public view returns (Knight[]) {
+    return knights;
   }
 }
