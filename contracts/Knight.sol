@@ -17,22 +17,24 @@ contract CryptoKnight {
   mapping (uint => address) public knightToOwner;
   mapping (address => uint) public ownerKnightCount;
 
-  function _createKnight(string _name, uint8 _dna) private {
+  function _createKnight(string _name, uint8 _dna) private returns (uint){
     Knight memory knight = Knight(_name, _dna);
     uint id = knights.push(knight) - 1;
     knightToOwner[id] = msg.sender;
     ownerKnightCount[msg.sender]++;
-    NewKnight(id, _name, _dna);
+    emit NewKnight(id, _name, _dna);
+    return id;
   }
 
   function _generateRandomDna(string _str) private view returns (uint8) {
-    uint rand = uint(keccak256(_str));
+    uint rand = uint(keccak256(abi.encodePacked(_str)));
     return uint8(rand % dnaModulus);
   }
 
-  function createRandomKnight(string _name) public {
+  function createRandomKnight(string _name) public returns (uint){
     uint8 randDna = _generateRandomDna(_name);
-    _createKnight(_name, randDna);
+    uint res = _createKnight(_name, randDna);
+    return res;
   }
 
   function getKnightsCount() public view returns (uint) {
