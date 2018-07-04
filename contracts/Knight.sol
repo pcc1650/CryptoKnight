@@ -18,11 +18,10 @@ contract CryptoKnight {
   mapping (address => uint) public ownerKnightCount;
 
   function _createKnight(string _name, uint8 _dna) private returns (uint){
-    Knight memory knight = Knight(_name, _dna);
-    uint id = knights.push(knight) - 1;
-    knightToOwner[id] = msg.sender;
-    ownerKnightCount[msg.sender]++;
-    emit NewKnight(id, _name, _dna);
+    uint id = knights.push(Knight({name: _name, dna: _dna})) - 1;
+    //knightToOwner[id] = msg.sender;
+    //ownerKnightCount[msg.sender]++;
+    //emit NewKnight(id, _name, _dna);
     return id;
   }
 
@@ -32,8 +31,8 @@ contract CryptoKnight {
   }
 
   function createRandomKnight(string _name) public returns (uint){
-    uint8 randDna = _generateRandomDna(_name);
-    uint res = _createKnight(_name, randDna);
+    //uint8 randDna = _generateRandomDna(_name);
+    uint res = _createKnight(_name, uint8(250));
     return res;
   }
 
@@ -42,6 +41,13 @@ contract CryptoKnight {
   }
 
   function getKnight(uint index) public view returns(string, uint) {
+    if(knights.length == 0){
+      return ('empty', 0);
+    }
     return (knights[index].name, knights[index].dna);
+  }
+
+  function test(string input) public pure returns(uint) {
+    return uint(keccak256(input));
   }
 }
