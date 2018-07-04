@@ -1,5 +1,4 @@
-// pragma solidity ^0.4.19;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.4.19;
 
 contract CryptoKnight {
 
@@ -15,8 +14,13 @@ contract CryptoKnight {
 
   Knight[] public knights;
 
+  mapping (uint => address) public knightToOwner;
+  mapping (address => uint) public ownerKnightCount;
+
   function _createKnight(string _name, uint _dna) private {
     uint id = knights.push(Knight(_name, _dna)) - 1;
+    knightToOwner[id] = msg.sender;
+    ownerKnightCount[msg.sender]++;
     NewKnight(id, _name, _dna);
   }
 
@@ -30,7 +34,11 @@ contract CryptoKnight {
     _createKnight(_name, randDna);
   }
 
-  function getKnights() public view returns (Knight[]) {
-    return knights;
+  function getKnightsCount() public constant returns (uint) {
+    return knights.length;
+  }
+
+  function getKnight(uint index) public constant returns(string, uint) {
+    return (knights[index].name, knights[index].dna);
   }
 }
